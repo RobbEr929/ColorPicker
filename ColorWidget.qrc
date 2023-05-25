@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/ColorWidget">
+        <file>icon.png</file>
+    </qresource>
+</RCC>
