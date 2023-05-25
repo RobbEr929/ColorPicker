@@ -58,19 +58,19 @@ void ColorDetailDialog::SlotCursorPositionChanged()
         case RepresentationMethod::HSV:
         {
             ui.typeLabel->setText("HSV:");
-            ui.colorEdit->setText(QString("(%1, %2%, %3%)").arg(color.hslHue()).arg(qCeil(color.hslSaturationF() * 100)).arg(qCeil(color.valueF() * 100)));
+            ui.colorEdit->setText(QString("(%1, %2%, %3%)").arg(qMin(360, qMax(0, color.hsvHue()))).arg(qRound(color.hsvSaturationF() * 100)).arg(qRound(color.valueF() * 100)));
             break;
         }
         case RepresentationMethod::HSL:
         {
             ui.typeLabel->setText("HSL:");
-            ui.colorEdit->setText(QString("(%1, %2%, %3%)").arg(color.hslHue()).arg(qCeil(color.hsvSaturationF() * 100)).arg(qCeil(color.lightnessF() * 100)));
+            ui.colorEdit->setText(QString("(%1, %2%, %3%)").arg(qMin(360, qMax(0, color.hslHue()))).arg(qRound(color.hslSaturationF() * 100)).arg(qRound(color.lightnessF() * 100)));
             break;
         }
         case RepresentationMethod::CMYK:
         {
             ui.typeLabel->setText("CMYK:");
-            ui.colorEdit->setText(QString("(%1%, %2%, %3%, %4%)").arg(qCeil(color.cyanF() * 100)).arg(qCeil(color.magentaF() * 100)).arg(qCeil(color.yellowF() * 100)).arg(qCeil(color.blackF() * 100)));
+            ui.colorEdit->setText(QString("(%1%, %2%, %3%, %4%)").arg(qRound(color.cyanF() * 100)).arg(qRound(color.magentaF() * 100)).arg(qRound(color.yellowF() * 100)).arg(qRound(color.blackF() * 100)));
             break;
         }
         }
