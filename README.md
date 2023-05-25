@@ -1,5 +1,7 @@
 ## 拾色助手(ColorPicker)
 
+- [English Documentation](./en/README.md)
+
 ### 功能
 
 后台运行，无感拾色；
@@ -17,4 +19,4 @@
 
 ## License
 
-[Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/)
+- [Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/)
