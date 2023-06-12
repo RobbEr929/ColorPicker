@@ -1,5 +1,7 @@
 ## 拾色助手(ColorPicker)
 
+- [English Documentation](./en/README.md)
+
 ## 版本
 
 V1.1.0 —— 于2023年6月12日更新；
@@ -25,4 +27,4 @@ V1.0.0 —— 于2023年5月25日更新；
 
 ## License
 
-[Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/)
+- [Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/)
