@@ -135,7 +135,7 @@ void ColorWidget::FindCursorBorder()
         {
             if (!image.valid(curX, y) || image.pixel(x, y) != image.pixel(curX, y))
             {
-                mRect.setLeft(curX);
+                mRect.setLeft(curX + 1);
                 break;
             }
         }
@@ -143,7 +143,7 @@ void ColorWidget::FindCursorBorder()
         {
             if (!image.valid(curX, y) || image.pixel(x, y) != image.pixel(curX, y))
             {
-                mRect.setRight(curX);
+                mRect.setRight(curX - 1);
                 break;
             }
         }
@@ -151,7 +151,7 @@ void ColorWidget::FindCursorBorder()
         {
             if (!image.valid(x, curY) || image.pixel(x, y) != image.pixel(x, curY))
             {
-                mRect.setTop(curY);
+                mRect.setTop(curY + 1);
                 break;
             }
         }
@@ -159,7 +159,7 @@ void ColorWidget::FindCursorBorder()
         {
             if (!image.valid(x, curY) || image.pixel(x, y) != image.pixel(x, curY))
             {
-                mRect.setBottom(curY);
+                mRect.setBottom(curY - 1);
                 break;
             }
         }
