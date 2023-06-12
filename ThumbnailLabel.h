@@ -1,14 +1,15 @@
-﻿#pragma once
+﻿#ifndef THUMBNAILLABEL_H
+#define THUMBNAILLABEL_H
 
-#include <QLabel>
 #include "ui_ThumbnailLabel.h"
 
-class ThumbnailLabel : public QLabel
+class ThumbnailLabel final
+    : public QLabel
 {
     Q_OBJECT
 
 public:
-    ThumbnailLabel(QWidget *parent = nullptr);
+    explicit ThumbnailLabel(QWidget *parent = nullptr);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -16,3 +17,5 @@ protected:
 private:
     Ui::ThumbnailLabelClass ui;
 };
+
+#endif // THUMBNAILLABEL_H

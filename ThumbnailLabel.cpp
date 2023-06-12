@@ -16,8 +16,8 @@ void ThumbnailLabel::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    painter.setPen(QPen(QColor(0, 255, 255, 127), 14));
+    painter.setPen(QPen(QColor(0, 255, 255, 128), 14));
 
-    painter.drawLine(QPointF(pos().x() + width() / 2 + 1, pos().y()), QPointF(pos().x() + width() / 2 + 1, pos().y() + height()));
-    painter.drawLine(QPointF(pos().x(), pos().y() + height() / 2), QPointF(pos().x() + width(), pos().y() + height() / 2));
+    painter.drawLine(QPointF(width() / 2.0 + 1, pos().y()), QPointF( width() / 2.0 + 1,  height()));
+    painter.drawLine(QPointF(pos().x(), height() / 2.0), QPointF(width(),  height() / 2.0));
 }

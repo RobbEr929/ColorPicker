@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ColorPicker</class>
+ <widget class="QWidget" name="ColorPicker">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>拾色助手(ColorPicker)</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="ColorWidget.qrc">
+    <normaloff>:/ColorWidget/icon.png</normaloff>:/ColorWidget/icon.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#transparentPage
+{
+	background-color: transparent;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+  </layout>
+ </widget>
+ <resources>
+  <include location="ColorWidget.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -4,132 +4,171 @@
 #include <QKeyEvent>
 #include <QScreen>
 #include <QStringBuilder>
-#include <QtMath>
+#include <QtSingleApplication>
+#include <QDebug>
 
 #include "AboutWidget.h"
 
 ColorDetailDialog::ColorDetailDialog(QWidget *parent)
     : QDialog(parent)
-    , mRepresentationMethod(RepresentationMethod::RGB)
 {
     ui.setupUi(this);
 
     setWindowFlag(Qt::Tool);
     setWindowFlag(Qt::FramelessWindowHint);
     setWindowFlag(Qt::WindowStaysOnTopHint);
+    setFixedSize(154, 208);
+
+    ui.ltLabel->SetPosition(RectangleBorderLabel::Position::LEFT_TOP);
+    ui.rtLabel->SetPosition(RectangleBorderLabel::Position::RIGHT_TOP);
+    ui.lbLabel->SetPosition(RectangleBorderLabel::Position::LEFT_BOTTOM);
+    ui.rbLabel->SetPosition(RectangleBorderLabel::Position::RIGHT_BOTTOM);
+    ui.lLabel->SetPosition(RectangleBorderLabel::Position::LEFT);
+    ui.tLabel->SetPosition(RectangleBorderLabel::Position::TOP);
+    ui.rLabel->SetPosition(RectangleBorderLabel::Position::RIGHT);
+    ui.bLabel->SetPosition(RectangleBorderLabel::Position::BOTTOM);
+    ui.cLabel->SetPosition(RectangleBorderLabel::Position::CENTER);
 }
 
-void ColorDetailDialog::SlotCursorPositionChanged()
+enum ColorDetailDialog::MeasureType ColorDetailDialog::MeasureType() const
 {
-    setGeometry(PositionCanShownCompleted(QCursor::pos()));
+    if (ui.contentWidget->currentWidget() == ui.colorPage)
+    {
+        return MeasureType::COLOR;
+    }
 
-    const int x = QCursor::pos().x();
-    const int y = QCursor::pos().y();
+    return MeasureType::SIZE;
+}
 
-    QScreen *screen = qApp->primaryScreen();
-    const QPixmap pixmap = screen->grabWindow(0, qMax(x - 5, 0), qMax(y - 3, 0), 11, 7);
+void ColorDetailDialog::ChangeMeasureType()
+{
+    if (ui.contentWidget->currentWidget() == ui.colorPage)
+    {
+        ui.contentWidget->setCurrentWidget(ui.rulerPage);
+        setFixedSize(165, 226);
+    }
+    else
+    {
+        ui.contentWidget->setCurrentWidget(ui.colorPage);
+        setFixedSize(154, 208);
+    }
+}
 
-    ui.thumbnailLabel->setPixmap(pixmap.scaled(154, 98));
-    
-    if (pixmap.isNull())
+void ColorDetailDialog::ChangeRepresentationMethod()
+{
+    if (ui.colorPage->isHidden())
     {
         return;
     }
 
-    const QImage image = pixmap.toImage();
-
-    if (image.valid(5, 3)) 
+    int index = ui.colorStackedWidget->currentIndex();
+    if (++index >= ui.colorStackedWidget->count())
     {
-        const QColor color = image.pixel(5, 3);
-        switch (mRepresentationMethod)
-        {
-        case RepresentationMethod::RGB:
-        {
-            ui.typeLabel->setText("RGB:");
-            ui.colorEdit->setText(QString("(%1, %2, %3)").arg(color.red()).arg(color.green()).arg(color.blue()));
-            break;
-        }
-        case RepresentationMethod::HEX:
-        {
-            ui.typeLabel->setText("HEX:");
-            ui.colorEdit->setText("#" % Rgb2Hex(color.red()) % Rgb2Hex(color.green()) % Rgb2Hex(color.blue()));
-            break;
-        }
-        case RepresentationMethod::HSV:
-        {
-            ui.typeLabel->setText("HSV:");
-            ui.colorEdit->setText(QString("(%1, %2%, %3%)").arg(qMin(360, qMax(0, color.hsvHue()))).arg(qRound(color.hsvSaturationF() * 100)).arg(qRound(color.valueF() * 100)));
-            break;
-        }
-        case RepresentationMethod::HSL:
-        {
-            ui.typeLabel->setText("HSL:");
-            ui.colorEdit->setText(QString("(%1, %2%, %3%)").arg(qMin(360, qMax(0, color.hslHue()))).arg(qRound(color.hslSaturationF() * 100)).arg(qRound(color.lightnessF() * 100)));
-            break;
-        }
-        case RepresentationMethod::CMYK:
-        {
-            ui.typeLabel->setText("CMYK:");
-            ui.colorEdit->setText(QString("(%1%, %2%, %3%, %4%)").arg(qRound(color.cyanF() * 100)).arg(qRound(color.magentaF() * 100)).arg(qRound(color.yellowF() * 100)).arg(qRound(color.blackF() * 100)));
-            break;
-        }
-        }
+        index = 0;
     }
-
-    ui.pointEdit->setText(QString("x:%1  y:%2").arg(x).arg(y));
-}
-
-void ColorDetailDialog::SlotChangeMethod()
-{
-    switch (mRepresentationMethod)
-    {
-    case RepresentationMethod::RGB:
-    {
-        mRepresentationMethod = RepresentationMethod::HEX;
-        break;
-    }
-    case RepresentationMethod::HEX:
-    {
-        mRepresentationMethod = RepresentationMethod::HSV;
-        break;
-    }
-    case RepresentationMethod::HSV:
-    {
-        mRepresentationMethod = RepresentationMethod::HSL;
-        break;
-    }
-    case RepresentationMethod::HSL:
-    {
-        mRepresentationMethod = RepresentationMethod::CMYK;
-        break;
-    }
-    case RepresentationMethod::CMYK:
-    {
-        mRepresentationMethod = RepresentationMethod::RGB;
-        break;
-    }
-    }
-    SlotCursorPositionChanged();
+    ui.colorStackedWidget->setCurrentIndex(index);
+    SlotUpdateCursorPosition();
 }
 
 void ColorDetailDialog::SlotCopyValue()
 {
-    qApp->clipboard()->setText(ui.colorEdit->text());
+    if(ui.contentWidget->currentWidget() != ui.colorPage)
+    {
+        return;
+    }
+
+    qApp->clipboard()->setText(ui.colorStackedWidget->currentWidget()->findChild<QLineEdit *>()->text());
 }
 
-QRect ColorDetailDialog::PositionCanShownCompleted(const QPoint &mousePoint)
+void ColorDetailDialog::SlotFixedDialog()
+{
+    mDialogFixed = !mDialogFixed;
+}
+
+void ColorDetailDialog::SlotUpdateCursorPosition()
+{
+    if (!mDialogFixed)
+    {
+        move(PositionCanShownCompleted(QCursor::pos()));
+    }
+
+    const int x = QCursor::pos().x();
+    const int y = QCursor::pos().y();
+
+    if (ui.contentWidget->currentWidget() == ui.colorPage)
+    {
+        ui.pointEdit->setText(QString("x:%1  y:%2").arg(x).arg(y));
+
+        const QPixmap pixmap = qApp->primaryScreen()->grabWindow(0, qMax(x - 5, 0), qMax(y - 3, 0), 11, 7);
+
+        ui.thumbnailLabel->setPixmap(pixmap.scaled(154, 98));
+
+        if (pixmap.isNull())
+        {
+            return;
+        }
+
+        const QImage image = pixmap.toImage();
+
+        ui.rgbEdit->clear();
+        ui.hexEdit->clear();
+        ui.hsvEdit->clear();
+        ui.hslEdit->clear();
+        ui.cmykEdit->clear();
+
+        if (image.valid(5, 3))
+        {
+            const QColor color = image.pixel(5, 3);
+            ui.rgbEdit->setText(QString("(%1, %2, %3)").arg(color.red()).arg(color.green()).arg(color.blue()));
+            ui.hexEdit->setText("#" % Rgb2Hex(color.red()) % Rgb2Hex(color.green()) % Rgb2Hex(color.blue()));
+            ui.hsvEdit->setText(QString("(%1, %2%, %3%)").arg(qMin(360, qMax(0, color.hsvHue()))).arg(qRound(color.hsvSaturationF() * 100)).arg(qRound(color.valueF() * 100)));
+            ui.hslEdit->setText(QString("(%1, %2%, %3%)").arg(qMin(360, qMax(0, color.hslHue()))).arg(qRound(color.hslSaturationF() * 100)).arg(qRound(color.lightnessF() * 100)));
+            ui.cmykEdit->setText(QString("(%1%, %2%, %3%, %4%)").arg(qRound(color.cyanF() * 100)).arg(qRound(color.magentaF() * 100)).arg(qRound(color.yellowF() * 100)).arg(qRound(color.blackF() * 100)));
+        }
+    }
+    else
+    {
+    }
+}
+
+void ColorDetailDialog::SlotPixmapChanged(const QPixmap &pixmap)
+{
+    mPixmap = pixmap;
+}
+
+void ColorDetailDialog::SlotMeasureRectChanged(QRect rect)
+{
+    qDebug() << rect;
+    ui.distanceEdit->setText(QString("%1 x %2").arg(rect.width()).arg(rect.height()));
+    ui.ltLabel->setPixmap(mPixmap.copy(qMax(rect.left() - 5, 0), qMax(rect.top() - 3, 0), 11, 7).scaled(55, 35));
+    ui.rtLabel->setPixmap(mPixmap.copy(qMax(rect.right() - 5, 0), qMax(rect.top() - 3, 0), 11, 7).scaled(55, 35));
+    ui.lbLabel->setPixmap(mPixmap.copy(qMax(rect.left() - 5, 0), qMax(rect.bottom() - 3, 0), 11, 7).scaled(55, 35));
+    ui.rbLabel->setPixmap(mPixmap.copy(qMax(rect.right() - 5, 0), qMax(rect.bottom() - 3, 0), 11, 7).scaled(55, 35));
+    ui.lLabel->setPixmap(mPixmap.copy(qMax(rect.left() - 5, 0), qMax(QCursor::pos().y() - 3, 0), 11, 7).scaled(55, 35));
+    ui.tLabel->setPixmap(mPixmap.copy(qMax(QCursor::pos().x() - 5, 0), qMax(rect.top() - 3, 0), 11, 7).scaled(55, 35));
+    ui.rLabel->setPixmap(mPixmap.copy(qMax(rect.right() - 5, 0), qMax(QCursor::pos().y() - 3, 0), 11, 7).scaled(55, 35));
+    ui.bLabel->setPixmap(mPixmap.copy(qMax(QCursor::pos().x() - 5, 0), qMax(rect.bottom() - 3, 0), 11, 7).scaled(55, 35));
+    ui.cLabel->setPixmap(mPixmap.copy(qMax(QCursor::pos().x() - 5, 0), qMax(QCursor::pos().y() - 3, 0), 11, 7).scaled(55, 35));
+}
+
+void ColorDetailDialog::showEvent(QShowEvent *event)
+{
+    mDialogFixed = false;
+}
+
+QPoint ColorDetailDialog::PositionCanShownCompleted(const QPoint &mousePoint)
 {
     const QRect screenRect = qApp->primaryScreen()->availableGeometry();
 
     bool canShownRight = false;
     bool canShownBottom = false;
-    if (screenRect.right() - mousePoint.x() >= 154)
+    if (screenRect.right() - mousePoint.x() >= width() + 10)
     {
         canShownRight = true;
     }
-    if (screenRect.bottom() - mousePoint.y() >= 198)
+    if (screenRect.bottom() - mousePoint.y() >= height() + 10)
     {
         canShownBottom = true;
     }
-    return QRect(mousePoint + QPoint(canShownRight ? 10 : -164, canShownBottom ? 0 : -198), QSize(154, 198));
+    return { mousePoint + QPoint(canShownRight ? 10 : -(width() + 10), canShownBottom ? 10 : -(height() + 10))};
 }

@@ -1,6 +1,6 @@
-﻿#pragma once
+﻿#ifndef ABOUTWIDGET_H
+#define ABOUTWIDGET_H
 
-#include <QDialog>
 #include "ui_AboutWidget.h"
 
 class AboutWidget final
@@ -9,7 +9,7 @@ class AboutWidget final
     Q_OBJECT
 
 public:
-   explicit AboutWidget(QWidget *parent = nullptr);
+    explicit AboutWidget(QWidget *parent = nullptr);
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override;
@@ -17,3 +17,6 @@ protected:
 private:
     Ui::AboutWidget ui;
 };
+
+#endif // ABOUTWIDGET_H
+

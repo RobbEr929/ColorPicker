@@ -16,6 +16,7 @@
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.19041.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.19041.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+    <ProjectName>ColorPicker</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -70,6 +71,15 @@
       <AdditionalDependencies>QHotkey1.lib;$(QTDIR)\lib\Qt5SingleApplication.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <AdditionalDependencies>QHotkey1.lib;$(QTDIR)\lib\Qt5SingleApplication.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\QHotKey;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -86,15 +96,16 @@
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="RectangleBorderLabel.cpp" />
     <ClCompile Include="ThumbnailLabel.cpp" />
     <QtRcc Include="ColorWidget.qrc" />
     <ClCompile Include="AboutWidget.cpp" />
@@ -109,7 +120,7 @@
   <ItemGroup>
     <QtUic Include="AboutWidget.ui" />
     <QtUic Include="ColorDetailDialog.ui" />
-    <QtUic Include="ColorWidget.ui" />
+    <QtUic Include="ColorPicker.ui" />
     <QtUic Include="OptionWidget.ui" />
     <QtUic Include="ThumbnailLabel.ui" />
   </ItemGroup>
@@ -130,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="define.h" />
+    <QtMoc Include="RectangleBorderLabel.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
