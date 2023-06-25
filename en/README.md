@@ -1,27 +1,23 @@
-**Color Picker (ColorPicker)**
+## Color Picker
 
-## Version
+### Version
 
-V1.1.0 - updated on June 12, 2023;
-
-V1.0.0 - updated on May 25, 2023;
+V1.1.1 - Updated on June 25, 2023: bug fixes;
+V1.1.0 ——Updated on June 12, 2023: Complete the screen ruler function;
+V1.0.0 ——Updated on May 25, 2023: Complete the color picking function;
 
 ### Function
 
 Running in the background, non-sensing color picking, screen ruler;
-
 Multiple color representation methods;
-
 Comes with a magnifying glass, easy to adjust the subtleties;
+Support manual or shortcut key on/off;
+Measure the size automatically measure the inner margin of the rectangle according to the position of the mouse;
 
-Support manual or shortcut key picking;
-
-Fix the screen when measuring the size, and automatically measure the inner margin;
-
-## Technology
+### technology
 
 Use VS2022, based on C++17 and Qt5.12.12;
 
-## License
+### License
 
 - [Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/)

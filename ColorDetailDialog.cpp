@@ -45,7 +45,7 @@ void ColorDetailDialog::ChangeMeasureType()
     if (ui.contentWidget->currentWidget() == ui.colorPage)
     {
         ui.contentWidget->setCurrentWidget(ui.rulerPage);
-        setFixedSize(165, 226);
+        setFixedSize(165, 202);
     }
     else
     {
@@ -87,10 +87,12 @@ void ColorDetailDialog::SlotFixedDialog()
 
 void ColorDetailDialog::SlotUpdateCursorPosition()
 {
-    if (!mDialogFixed)
+    if (mDialogFixed)
     {
-        move(PositionCanShownCompleted(QCursor::pos()));
+        return;
     }
+
+    move(PositionCanShownCompleted(QCursor::pos()));
 
     const int x = QCursor::pos().x();
     const int y = QCursor::pos().y();
