@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>261</width>
-    <height>259</height>
+    <height>279</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -262,7 +262,7 @@
             </font>
            </property>
            <property name="text">
-            <string>版本: V1.0.0</string>
+            <string>版本: V1.1.2</string>
            </property>
           </widget>
          </item>

@@ -163,7 +163,6 @@ void ColorWidget::FindCursorBorder()
                 break;
             }
         }
-
     }
 }
 
